@@ -3,19 +3,25 @@
 	"modList": [{
 		"modid": "${modId}",
 		"name": "${modName}",
-		"description": "An example mod for Minecraft 1.7.10 with Forge focused on a stable setup.",
+		"description": "A backport of FramedCompactDrawers from 1.12.2 to 1.7.10, providing custom material overlays for Storage Drawers blocks.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}",
-		"url": "https://github.com/SinTh0r4s/MyMod",
-		"updateUrl": "",
-		"authorList": ["SinTho0r4s"],
-		"credits": "",
+		"url": "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy",
+		"updateUrl": "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy/releases/latest",
+		"authorList": ["MrFuzzihead"],
+		"credits": "Original concept by eutros (1.12.2)",
 		"logoFile": "",
 		"screenshots": [],
 		"parent": "",
-		"requiredMods": [],
-		"dependencies": [],
+		"requiredMods": ["storagedrawers"],
+		"dependencies": [
+			{
+				"modId": "storagedrawers",
+				"optional": false,
+				"reason": "Required for drawer functionality and custom material system."
+			}
+		],
 		"dependants": [],
-		"useDependencyInformation": false
+		"useDependencyInformation": true
 	}]
 }

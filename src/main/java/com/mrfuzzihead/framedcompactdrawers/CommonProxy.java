@@ -14,10 +14,15 @@ public class CommonProxy {
 
         FramedCompactDrawers.LOG.info(Config.greeting);
         FramedCompactDrawers.LOG.info("I am FramedCompactDrawers at version " + Tags.VERSION);
+
+        registry.ModBlocks.register();
+        registry.ModItems.register();
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLInitializationEvent event) {
+        registry.ModRecipes.register();
+    }
 
     // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
     public void postInit(FMLPostInitializationEvent event) {}
