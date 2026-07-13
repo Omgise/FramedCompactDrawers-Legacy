@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.mrfuzzihead.framedcompactdrawers;
 
 import java.io.File;
 

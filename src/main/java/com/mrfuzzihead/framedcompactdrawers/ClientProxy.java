@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.mrfuzzihead.framedcompactdrawers;
 
 public class ClientProxy extends CommonProxy {
 
