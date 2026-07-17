@@ -3,6 +3,8 @@ package com.mrfuzzihead.framedcompactdrawers;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.mrfuzzihead.framedcompactdrawers.registry.ModItems;
+
 public class FCDCreativeTab extends CreativeTabs {
 
     public static final FCDCreativeTab TAB = new FCDCreativeTab();
@@ -13,6 +15,6 @@ public class FCDCreativeTab extends CreativeTabs {
 
     @Override
     public Item getTabIconItem() {
-        return null; // Will be set after blocks are registered
+        return ModItems.framedCompactDrawerItem;
     }
 }

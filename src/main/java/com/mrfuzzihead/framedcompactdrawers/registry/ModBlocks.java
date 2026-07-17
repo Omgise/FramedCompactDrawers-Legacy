@@ -1,7 +1,16 @@
 package com.mrfuzzihead.framedcompactdrawers.registry;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave;
+import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
+import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController;
+import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
+import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedCompactDrawer;
+import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedController;
+import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedSlave;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -12,26 +21,21 @@ public class ModBlocks {
     public static Block framedSlave = null;
 
     public static void register() {
-        framedCompactDrawer = new com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer();
-        GameRegistry.registerBlock(framedCompactDrawer, Item.class, "framed_compact_drawer");
+        framedCompactDrawer = new BlockFramedCompactDrawer();
+        GameRegistry.registerBlock(framedCompactDrawer, ItemFramedCompactDrawer.class, "framed_compact_drawer");
 
-        framedDrawerController = new com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController();
-        GameRegistry.registerBlock(framedDrawerController, Item.class, "framed_drawer_controller");
+        framedDrawerController = new BlockFramedController();
+        GameRegistry.registerBlock(framedDrawerController, ItemFramedController.class, "framed_drawer_controller");
 
-        framedSlave = new com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave();
-        GameRegistry.registerBlock(framedSlave, Item.class, "framed_slave");
+        framedSlave = new BlockFramedSlave();
+        GameRegistry.registerBlock(framedSlave, ItemFramedSlave.class, "framed_slave");
 
         registerTileEntities();
     }
 
     public static void registerTileEntities() {
-        GameRegistry.registerTileEntity(
-            com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer.class,
-            "framed_compact_drawer");
-        GameRegistry.registerTileEntity(
-            com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController.class,
-            "framed_drawer_controller");
-        GameRegistry
-            .registerTileEntity(com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave.class, "framed_slave");
+        GameRegistry.registerTileEntity(TileFramedCompactDrawer.class, "framed_compact_drawer");
+        GameRegistry.registerTileEntity(TileFramedController.class, "framed_drawer_controller");
+        GameRegistry.registerTileEntity(TileFramedSlave.class, "framed_slave");
     }
 }

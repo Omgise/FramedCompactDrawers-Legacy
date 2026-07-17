@@ -2,22 +2,20 @@ package com.mrfuzzihead.framedcompactdrawers.block;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import com.mrfuzzihead.framedcompactdrawers.FCDCreativeTab;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
+import com.mrfuzzihead.framedcompactdrawers.client.ClientProxy;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,12 +23,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockFramedCompactDrawer extends BlockDrawersCustom {
 
     public BlockFramedCompactDrawer() {
-        super("framedcompactdrawers.framed_compact_drawer", "framed_compact_drawer", 3, false);
-        this.func_149647_a(FCDCreativeTab.TAB);
+        super("framedcompactdrawers.framed_compact_drawer", 3, false);
+        this.setCreativeTab(FCDCreativeTab.TAB);
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers createNewTileEntity(World world,
+        int meta) {
         return new TileFramedCompactDrawer();
     }
 
@@ -38,7 +37,7 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
      * Ported from 1.12 BlockDrawersCustomComp.getDrawerSlot: top hit -> slot 0, else left/right via hitLeft/hitTop
      * helpers.
      */
-    protected int getDrawerSlot(int side, float hitX, float hitY, float hitZ) {
+    public int getDrawerSlot(int side, float hitX, float hitY, float hitZ) {
         if (this.hitTop(hitY)) {
             return 0;
         } else {
@@ -46,7 +45,6 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
         }
     }
 
-    @Override
     protected int getDrawerCount() {
         return 3;
     }
@@ -55,19 +53,23 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
      * Only add a single plain stack to creative tab sub-items (mirrors BlockDrawersCustom.getSubBlocks behavior).
      */
     @Override
-    public void getSubBlocks(Block block, CreativeTabs creativeTabs, List itemList) {
+    public void getSubBlocks(net.minecraft.item.Item item, CreativeTabs creativeTabs, List itemList) {
         if (StorageDrawers.config.cache.addonShowVanilla) {
-            itemList.add(new ItemStack(block));
+            itemList.add(new ItemStack(item));
         }
     }
 
+    @Override
+    public int getRenderType() {
+        return ClientProxy.framedCompactDrawerRenderId;
+    }
+
     /**
-     * Ported from 1.12 BlockDrawersCustomComp.getMainDrop: serialize material + sealed tile NBT when
-     * keepContentsOnBreak is on.
+     * Ported from 1.12 BlockDrawersCustomComp.getMainDrop: serialize material + sealed tile NBT.
      */
     @Override
-    protected ItemStack getMainDrop(IBlockAccess world, int x, int y, int z) {
-        TileEntityDrawersComp tile = this.getTileEntity(world, x, y, z);
+    protected ItemStack getMainDrop(World world, int x, int y, int z, int meta) {
+        TileEntityDrawers tile = this.getTileEntity(world, x, y, z);
         if (tile == null) {
             return ItemCustomDrawers.makeItemStack(this, 1, (ItemStack) null, (ItemStack) null, (ItemStack) null);
         } else {
@@ -75,20 +77,16 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
                 .makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
 
             if (drop == null || drop.getItem() == null) {
-                return ItemStack.EMPTY;
+                return null;
             }
 
             NBTTagCompound data = new NBTTagCompound();
             boolean hasContents = false;
-            if (StorageDrawers.config.cache.keepContentsOnBreak) {
-                for (int i = 0; i < tile.getGroup()
-                    .getDrawerCount(); i++) {
-                    if (!tile.getGroup()
-                        .getDrawer(i)
-                        .isEmpty()) {
-                        hasContents = true;
-                        break;
-                    }
+            for (int i = 0; i < tile.getDrawerCount(); i++) {
+                if (!tile.getDrawer(i)
+                    .isEmpty()) {
+                    hasContents = true;
+                    break;
                 }
             }
 
@@ -108,21 +106,8 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
     public void registerBlockIcons(net.minecraft.client.renderer.texture.IIconRegister register) {
         super.registerBlockIcons(register);
 
-        // Register the 3 per-slot front textures: drawers_comp_raw_open_1, _2, _3
-        for (int i = 1; i <= 3; i++) {
-            this.iconFront1[i] = register
-                .registerIcon("framedcompactdrawers:textures/blocks/drawers_comp_raw_open_" + i);
-        }
-
-        // Register disabled-slot overlay icons: open_1, open_2, open_3
-        for (int i = 0; i < iconOverlay.length; i++) {
-            String suffix = "open_" + (i + 1);
-            if (iconOverlay[i] != null) {
-                iconOverlay[i] = register.registerIcon("framedcompactdrawers:textures/blocks/overlay/" + suffix);
-            } else {
-                iconOverlay[i] = register.registerIcon("framedcompactdrawers:textures/blocks/overlay/" + suffix);
-            }
-        }
+        // Register the 1 front texture for the compact drawer (iconFront1 is a 1-element array)
+        this.iconFront1[0] = register.registerIcon("framedcompactdrawers:textures/blocks/drawers_comp_raw_open_1");
     }
 
     @Override
@@ -136,7 +121,7 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
     public IIcon getIcon(int side, int meta) {
         // For bottom/top faces use iconSideV (same as base BlockDrawersCustom)
         if (side == 0 || side == 1) {
-            return this.iconSideV;
+            return this.iconSideV[0];
         }
         // For the front face, delegate to getDrawerIcon logic from BlockDrawersCustom which picks the correct slot's
         // icon

@@ -1,5 +1,9 @@
 package com.mrfuzzihead.framedcompactdrawers;
 
+import com.mrfuzzihead.framedcompactdrawers.registry.ModBlocks;
+import com.mrfuzzihead.framedcompactdrawers.registry.ModItems;
+import com.mrfuzzihead.framedcompactdrawers.registry.ModRecipes;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -7,26 +11,18 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class CommonProxy {
 
-    // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
-    // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
         Config.synchronizeConfiguration(event.getSuggestedConfigurationFile());
 
-        FramedCompactDrawers.LOG.info(Config.greeting);
-        FramedCompactDrawers.LOG.info("I am FramedCompactDrawers at version " + Tags.VERSION);
-
-        registry.ModBlocks.register();
-        registry.ModItems.register();
+        ModBlocks.register();
+        ModItems.register();
     }
 
-    // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
     public void init(FMLInitializationEvent event) {
-        registry.ModRecipes.register();
+        ModRecipes.register();
     }
 
-    // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
     public void postInit(FMLPostInitializationEvent event) {}
 
-    // register server commands in this event handler (Remove if not needed)
     public void serverStarting(FMLServerStartingEvent event) {}
 }

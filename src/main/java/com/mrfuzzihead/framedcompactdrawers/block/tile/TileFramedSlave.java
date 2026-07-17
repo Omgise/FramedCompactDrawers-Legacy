@@ -78,7 +78,6 @@ public class TileFramedSlave extends TileEntitySlave {
     /**
      * Update the slave tile entity.
      */
-    @Override
     public void updateEntity() {
         super.updateEntity();
     }

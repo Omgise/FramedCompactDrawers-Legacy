@@ -1,5 +1,6 @@
 package com.mrfuzzihead.framedcompactdrawers.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,12 +14,11 @@ import net.minecraft.world.World;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
-import com.jaquadro.minecraft.storagedrawers.block.EnumKeyType;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import com.mrfuzzihead.framedcompactdrawers.FCDCreativeTab;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
+import com.mrfuzzihead.framedcompactdrawers.client.ClientProxy;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +31,7 @@ public class BlockFramedSlave extends BlockContainer {
     public BlockFramedSlave() {
         super(Material.rock);
         this.setBlockName("framedcompactdrawers.framed_slave");
-        this.func_149647_a(FCDCreativeTab.TAB);
+        this.setCreativeTab(FCDCreativeTab.TAB);
         this.setHardness(2.0f);
         this.setStepSound(Block.soundTypeStone);
         this.setLightOpacity(15);
@@ -49,7 +49,6 @@ public class BlockFramedSlave extends BlockContainer {
             return (TileFramedSlave) tile;
         } else {
             TileFramedSlave slave = new TileFramedSlave();
-            slave.setWorldAndCoordinates(world, x, y, z);
             world.setBlock(x, y, z, this);
             return slave;
         }
@@ -81,65 +80,23 @@ public class BlockFramedSlave extends BlockContainer {
 
         ItemStack heldItem = player.getCurrentEquippedItem();
         if (heldItem != null) {
-            // Look up the slave tile's bound controller position and delegate key-toggle to it.
-            TileEntitySlave slaveTile = te.getBoundController(world, x, y, z);
-            if (slaveTile == null) {
+            com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController controller = te.getController();
+            if (controller == null) {
                 return true;
             }
 
-            int cx = slaveTile.xCoord;
-            int cy = slaveTile.yCoord;
-            int cz = slaveTile.zCoord;
-            net.minecraft.block.Block controllerBlock = world.getBlock(cx, cy, cz);
-
-            if (controllerBlock instanceof BlockFramedController) {
-                this.delegateToggleToController(
-                    (BlockFramedController) controllerBlock,
-                    world,
-                    cx,
-                    cy,
-                    cz,
-                    player,
-                    heldItem);
-                return true;
-            } else if (controllerBlock instanceof com.jaquadro.minecraft.storagedrawers.block.BlockController) {
-                // If the bound controller is a vanilla one, delegate to it directly.
-                com.jaquadro.minecraft.storagedrawers.block.BlockController vanilla = (com.jaquadro.minecraft.storagedrawers.block.BlockController) controllerBlock;
-                this.delegateToggleToVanillaController(vanilla, world, cx, cy, cz, player, heldItem);
-                return true;
+            if (heldItem.getItem() == ModItems.shroudKey) {
+                controller.toggleShroud(player.getGameProfile());
+            } else if (heldItem.getItem() == ModItems.quantifyKey) {
+                controller.toggleQuantify(player.getGameProfile());
+            } else if (heldItem.getItem() == ModItems.personalKey) {
+                String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
+                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+                controller.toggleProtection(player.getGameProfile(), provider);
             }
+            return true;
         }
         return false;
-    }
-
-    private void delegateToggleToController(
-        com.jaquadro.minecraft.storagedrawers.block.BlockFramedController controller, World world, int x, int y, int z,
-        EntityPlayer player, ItemStack heldItem) {
-        if (heldItem.getItem() == ModItems.drawerKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.DRAWER);
-        } else if (heldItem.getItem() == ModItems.shroudKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.CONCEALMENT);
-        } else if (heldItem.getItem() == ModItems.quantifyKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.QUANTIFY);
-        } else if (heldItem.getItem() == ModItems.personalKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.PERSONAL);
-        }
-    }
-
-    private void delegateToggleToVanillaController(
-        com.jaquadro.minecraft.storagedrawers.block.BlockController controller, World world, int x, int y, int z,
-        EntityPlayer player, ItemStack heldItem) {
-        if (heldItem.getItem() == ModItems.drawerKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.DRAWER);
-        } else if (heldItem.getItem() == ModItems.shroudKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.CONCEALMENT);
-        } else if (heldItem.getItem() == ModItems.quantifyKey) {
-            controller.toggle(world, x, y, z, player, EnumKeyType.QUANTIFY);
-        } else if (heldItem.getItem() == ModItems.personalKey) {
-            String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
-            ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-            controller.toggleProtection(world, x, y, z, player, provider);
-        }
     }
 
     @Override
@@ -154,7 +111,8 @@ public class BlockFramedSlave extends BlockContainer {
                 te.writeToNBT(data);
                 drop.setTagCompound(data);
 
-                world.spawnBlockInEntity(x + 0.5, y + 0.5, z + 0.5, drop);
+                world.spawnEntityInWorld(
+                    new net.minecraft.entity.item.EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drop));
             }
         }
     }
@@ -177,7 +135,7 @@ public class BlockFramedSlave extends BlockContainer {
 
     @Override
     public int getRenderType() {
-        return -1; // Custom rendering via ISimpleBlockRenderingHandler
+        return ClientProxy.framedSlaveRenderId;
     }
 
     @Override
@@ -194,7 +152,7 @@ public class BlockFramedSlave extends BlockContainer {
      * Only add a single plain stack to creative tab sub-items.
      */
     @Override
-    public void getSubBlocks(net.minecraft.block.Block block, CreativeTabs creativeTabs, java.util.List itemList) {
-        itemList.add(new ItemStack(block));
+    public void getSubBlocks(net.minecraft.item.Item item, CreativeTabs creativeTabs, java.util.List itemList) {
+        itemList.add(new ItemStack(item));
     }
 }

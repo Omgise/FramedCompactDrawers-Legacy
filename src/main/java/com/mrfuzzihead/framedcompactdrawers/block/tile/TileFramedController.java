@@ -86,17 +86,8 @@ public class TileFramedController extends TileEntityController {
     }
 
     /**
-     * Put items into the controller inventory when interacted with an open drawer.
-     */
-    public void interactPutItemsIntoInventory(net.minecraft.entity.player.EntityPlayer player) {
-        // The controller doesn't have its own storage in vanilla StorageDrawers 1.7.10,
-        // but this method is called from the block's onBlockActivated for parity
-    }
-
-    /**
      * Ported from TileControllerCustom.func_145829_t: replace with framed variant if needed.
      */
-    @Override
     public void updateEntity() {
         super.updateEntity();
     }

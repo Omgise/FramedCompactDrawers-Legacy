@@ -5,10 +5,10 @@ import com.mrfuzzihead.framedcompactdrawers.client.render.RenderFramedCompactDra
 import com.mrfuzzihead.framedcompactdrawers.client.render.RenderFramedController;
 import com.mrfuzzihead.framedcompactdrawers.client.render.RenderFramedSlave;
 
-import cpw.mods.fml.client.registry.RenderRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
@@ -33,8 +33,8 @@ public class ClientProxy extends CommonProxy {
         super.init(event);
 
         // Register render handlers
-        RenderRegistry.registerBlockHandler(new RenderFramedCompactDrawer());
-        RenderRegistry.registerBlockHandler(new RenderFramedController());
-        RenderRegistry.registerBlockHandler(new RenderFramedSlave());
+        RenderingRegistry.registerBlockHandler(new RenderFramedCompactDrawer());
+        RenderingRegistry.registerBlockHandler(new RenderFramedController());
+        RenderingRegistry.registerBlockHandler(new RenderFramedSlave());
     }
 }

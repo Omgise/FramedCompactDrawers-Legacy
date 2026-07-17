@@ -8,6 +8,7 @@ import net.minecraft.world.IBlockAccess;
 
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController;
+import com.mrfuzzihead.framedcompactdrawers.client.ClientProxy;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;

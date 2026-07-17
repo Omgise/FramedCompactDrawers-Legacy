@@ -1,27 +1,30 @@
 package com.mrfuzzihead.framedcompactdrawers.block;
 
-import java.util.EnumSet;
+import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
-import com.jaquadro.minecraft.storagedrawers.block.EnumKeyType;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import com.mrfuzzihead.framedcompactdrawers.FCDCreativeTab;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController;
+import com.mrfuzzihead.framedcompactdrawers.client.ClientProxy;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -35,7 +38,7 @@ public class BlockFramedController extends BlockContainer {
     public BlockFramedController() {
         super(Material.rock);
         this.setBlockName("framedcompactdrawers.framed_drawer_controller");
-        this.func_149647_a(FCDCreativeTab.TAB);
+        this.setCreativeTab(FCDCreativeTab.TAB);
         this.setHardness(2.0f);
         this.setStepSound(Block.soundTypeStone);
         this.setLightOpacity(15);
@@ -64,7 +67,6 @@ public class BlockFramedController extends BlockContainer {
         TileFramedController tileCustom = this.getTrueTileEntity(tile);
         if (tileCustom == null) {
             tileCustom = new TileFramedController();
-            tileCustom.setWorldAndCoordinates(world, x, y, z);
             world.setBlock(x, y, z, this);
         }
         return tileCustom;
@@ -75,43 +77,61 @@ public class BlockFramedController extends BlockContainer {
      * adjacent to solid blocks on one side but not the other.
      */
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, net.minecraft.block.Block neighbor) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor) {
         if (!world.isRemote) {
             int meta = world.getBlockMetadata(x, y, z);
-            EnumFacing facing = this.getDirectionFromMeta(meta);
+            int facing = this.getDirectionFromMeta(meta);
 
             boolean northSolid = world.getBlock(x, y, z - 1)
-                .isSideSolid(world, x, y, z - 1, EnumFacing.SOUTH);
+                .isSideSolid(world, x, y, z - 1, ForgeDirection.SOUTH);
             boolean southSolid = world.getBlock(x, y, z + 1)
-                .isSideSolid(world, x, y, z + 1, EnumFacing.NORTH);
+                .isSideSolid(world, x, y, z + 1, ForgeDirection.NORTH);
             boolean westSolid = world.getBlock(x - 1, y, z)
-                .isSideSolid(world, x - 1, y, z, EnumFacing.EAST);
+                .isSideSolid(world, x - 1, y, z, ForgeDirection.EAST);
             boolean eastSolid = world.getBlock(x + 1, y, z)
-                .isSideSolid(world, x + 1, y, z, EnumFacing.WEST);
+                .isSideSolid(world, x + 1, y, z, ForgeDirection.WEST);
 
-            if (facing == EnumFacing.NORTH && !northSolid && southSolid) {
-                facing = EnumFacing.SOUTH;
-            } else if (facing == EnumFacing.SOUTH && !southSolid && northSolid) {
-                facing = EnumFacing.NORTH;
-            } else if (facing == EnumFacing.WEST && !westSolid && eastSolid) {
-                facing = EnumFacing.EAST;
-            } else if (facing == EnumFacing.EAST && !eastSolid && westSolid) {
-                facing = EnumFacing.WEST;
+            if (facing == 3 && !northSolid && southSolid) {
+                facing = 2;
+            } else if (facing == 2 && !southSolid && northSolid) {
+                facing = 3;
+            } else if (facing == 4 && !westSolid && eastSolid) {
+                facing = 5;
+            } else if (facing == 5 && !eastSolid && westSolid) {
+                facing = 4;
             }
 
             world.setBlockMetadataWithNotify(x, y, z, this.getMetaFromDirection(facing), 2);
         }
+        super.onNeighborBlockChange(world, x, y, z, neighbor);
     }
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
-        EnumFacing facing = EnumFacing.getDirectionFromEntityRotation(x, z, placer.rotationYaw);
-        if (facing.getAxis() == EnumFacing.Axis.Y) {
-            facing = EnumFacing.NORTH;
+        // Get direction from player rotation, map to SD 1.7.10 meta convention: 2=SOUTH, 3=NORTH, 4=WEST, 5=EAST
+        float yaw = placer.rotationYaw * 4 / 360 + 0.5f;
+        int dir = (int) yaw;
+        if (dir < 0) dir += 4;
+        dir = dir % 4;
+        int meta;
+        switch (dir) {
+            case 0:
+                meta = 3;
+                break; // NORTH
+            case 1:
+                meta = 2;
+                break; // SOUTH
+            case 2:
+                meta = 5;
+                break; // EAST
+            case 3:
+                meta = 4;
+                break; // WEST
+            default:
+                meta = 3;
+                break;
         }
 
-        // Store direction in metadata for later retrieval
-        int meta = this.getMetaFromDirection(facing);
         TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
         if (te != null) {
             te.setDirection(meta);
@@ -138,78 +158,33 @@ public class BlockFramedController extends BlockContainer {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
         float hitY, float hitZ) {
         TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
+        if (te == null) return false;
 
-        // Check if a key item is being used on the controller first
         ItemStack heldItem = player.getCurrentEquippedItem();
-        boolean toggled = false;
         if (heldItem != null) {
-            if (heldItem.getItem() == ModItems.drawerKey) {
-                this.toggle(world, x, y, z, player, EnumKeyType.DRAWER);
-                toggled = true;
-            } else if (heldItem.getItem() == ModItems.shroudKey) {
-                this.toggle(world, x, y, z, player, EnumKeyType.CONCEALMENT);
-                toggled = true;
+            // drawerKey doesn't exist in 1.7.10 SD - deferred
+            if (heldItem.getItem() == ModItems.shroudKey) {
+                te.toggleShroud(player.getGameProfile());
             } else if (heldItem.getItem() == ModItems.quantifyKey) {
-                this.toggle(world, x, y, z, player, EnumKeyType.QUANTIFY);
-                toggled = true;
+                te.toggleQuantify(player.getGameProfile());
             } else if (heldItem.getItem() == ModItems.personalKey) {
-                this.toggle(world, x, y, z, player, EnumKeyType.PERSONAL);
-                toggled = true;
-            }
-        }
-
-        // Get the direction that was stored in the tile entity
-        int meta = world.getBlockMetadata(x, y, z);
-        EnumFacing blockDir = this.getDirectionFromMeta(meta);
-
-        if (!toggled && te != null) {
-            // Put items into controller inventory when interacting with front face
-            if (heldItem == null && side == 0) {
-                te.interactPutItemsIntoInventory(player);
-                return true;
+                String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
+                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+                te.toggleProtection(player.getGameProfile(), provider);
             }
             return true;
         }
 
-        return toggled;
-    }
-
-    /**
-     * Toggle controller features via key items.
-     */
-    public void toggle(World world, int x, int y, int z, EntityPlayer player, EnumKeyType keyType) {
-        if (world.isRemote) return;
-
-        TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
-        if (te == null) return;
-
-        switch (keyType) {
-            case DRAWER:
-                te.toggleLock(
-                    EnumSet.allOf(LockAttribute.class),
-                    LockAttribute.LOCK_POPULATED,
-                    player.getGameProfile()
-                        .getName());
-                break;
-            case CONCEALMENT:
-                te.toggleShroud(player.getGameProfile());
-                break;
-            case QUANTIFY:
-                te.toggleQuantify(player.getGameProfile());
-                break;
-            case PERSONAL:
-                String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
-                ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
-                te.toggleProtection(player.getGameProfile(), provider);
-                break;
-        }
+        // Put items into controller inventory when interacting
+        te.interactPutItemsIntoInventory(player);
+        return true;
     }
 
     /**
      * Ported from 1.12 func_180650_b: drop the item with material NBT when broken.
      */
     @Override
-    public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int meta) {
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         if (!world.isRemote) {
             TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
             if (te != null) {
@@ -220,14 +195,14 @@ public class BlockFramedController extends BlockContainer {
                 te.writeToNBT(data);
                 drop.setTagCompound(data);
 
-                world.spawnBlockInEntity(x + 0.5, y + 0.5, z + 0.5, drop);
+                world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drop));
             }
         }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerBlockIcons(net.minecraft.client.renderer.texture.IIconRegister register) {
+    public void registerBlockIcons(IIconRegister register) {
         String prefix = "framedcompactdrawers:textures/blocks/";
 
         this.iconSide = register.registerIcon(prefix + "raw_side");
@@ -247,7 +222,7 @@ public class BlockFramedController extends BlockContainer {
 
     @Override
     public int getRenderType() {
-        return -1; // Custom rendering, not vanilla model
+        return ClientProxy.framedDrawerControllerRenderId;
     }
 
     @Override
@@ -264,35 +239,75 @@ public class BlockFramedController extends BlockContainer {
      * Only add a single plain stack to creative tab sub-items.
      */
     @Override
-    public void getSubBlocks(net.minecraft.block.Block block, CreativeTabs creativeTabs, java.util.List itemList) {
-        itemList.add(new ItemStack(block));
+    public void getSubBlocks(Item item, CreativeTabs creativeTabs, List itemList) {
+        itemList.add(new ItemStack(item));
     }
 
     /**
-     * Convert stored meta back to EnumFacing direction (stored as: 2=NORTH, 3=SOUTH, 4=WEST, 5=EAST).
+     * Convert stored meta back to integer direction (stored as: 2=SOUTH, 3=NORTH, 4=WEST, 5=EAST).
      */
-    public static EnumFacing getDirectionFromMeta(int meta) {
+    public static int getDirectionFromMeta(int meta) {
         switch (meta) {
-            case 0:
-                return EnumFacing.NORTH; // default
-            case 1:
-                return EnumFacing.SOUTH;
             case 2:
-                return EnumFacing.WEST;
+                return 1; // SOUTH
             case 3:
-                return EnumFacing.EAST;
+                return 0; // NORTH
+            case 4:
+                return 3; // WEST
+            case 5:
+                return 2; // EAST
             default:
-                return EnumFacing.NORTH;
+                return 0; // NORTH
         }
     }
 
     /**
-     * Convert EnumFacing to stored meta value.
+     * Convert integer direction to stored meta value (2=SOUTH, 3=NORTH, 4=WEST, 5=EAST).
      */
-    public static int getMetaFromDirection(EnumFacing direction) {
-        if (direction == EnumFacing.SOUTH) return 1;
-        if (direction == EnumFacing.WEST) return 2;
-        if (direction == EnumFacing.EAST) return 3;
-        return 0; // NORTH
+    public static int getMetaFromDirection(int direction) {
+        switch (direction) {
+            case 0:
+                return 3; // NORTH
+            case 1:
+                return 2; // SOUTH
+            case 2:
+                return 5; // EAST
+            case 3:
+                return 4; // WEST
+            default:
+                return 3; // NORTH
+        }
+    }
+
+    /**
+     * Delegate method for slave blocks to toggle the shroud on this controller.
+     */
+    public void toggleShroud(World world, int x, int y, int z, EntityPlayer player) {
+        TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
+        if (te != null) {
+            te.toggleShroud(player.getGameProfile());
+        }
+    }
+
+    /**
+     * Delegate method for slave blocks to toggle the quantify on this controller.
+     */
+    public void toggleQuantify(World world, int x, int y, int z, EntityPlayer player) {
+        TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
+        if (te != null) {
+            te.toggleQuantify(player.getGameProfile());
+        }
+    }
+
+    /**
+     * Delegate method for slave blocks to toggle the personal protection on this controller.
+     */
+    public void togglePersonal(World world, int x, int y, int z, EntityPlayer player) {
+        TileFramedController te = this.getTrueTileEntitySafe(world, x, y, z);
+        if (te != null) {
+            String securityKey = ModItems.personalKey.getSecurityProviderKey(0);
+            ISecurityProvider provider = StorageDrawers.securityRegistry.getProvider(securityKey);
+            te.toggleProtection(player.getGameProfile(), provider);
+        }
     }
 }

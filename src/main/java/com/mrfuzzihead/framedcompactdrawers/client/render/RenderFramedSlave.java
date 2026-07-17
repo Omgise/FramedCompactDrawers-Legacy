@@ -32,8 +32,6 @@ public class RenderFramedSlave implements ISimpleBlockRenderingHandler {
         IIcon iconTrim = null;
 
         if (tile != null && block instanceof com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave) {
-            Block framedSlaveBlock = (com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave) block;
-
             ItemStack sideStack = tile.getMaterialSide();
             if (sideStack != null && sideStack.getItem() != null) {
                 Block matBlock = net.minecraft.block.Block.getBlockFromItem(sideStack.getItem());
@@ -60,10 +58,10 @@ public class RenderFramedSlave implements ISimpleBlockRenderingHandler {
 
             // Use block's default icons as fallback for side and top/bottom
             if (iconSide == null) {
-                iconSide = framedSlaveBlock.iconSide;
+                iconSide = block.getIcon(2, world.getBlockMetadata(x, y, z));
             }
             if (iconTopBottom == null) {
-                iconTopBottom = framedSlaveBlock.iconTopBottom;
+                iconTopBottom = block.getIcon(0, world.getBlockMetadata(x, y, z));
             }
 
             // Render trim overlay on sides

@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
+import com.mrfuzzihead.framedcompactdrawers.client.ClientProxy;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -82,7 +83,7 @@ public class RenderFramedCompactDrawer implements ISimpleBlockRenderingHandler {
         renderer.setRenderBounds(0.0f, topY, frontZ, 1.0f, 1.0f, 1.0f);
         IIcon slot0Front = getSlotFrontIcon(tile, 0);
         if (slot0Front != null) {
-            renderer.renderFaceYPos(block, x, y, z, side, slot0Front);
+            renderer.renderFaceYPos(block, x, y, z, slot0Front);
         }
 
         // Slot 1 - left drawer (left portion of middle two-thirds)
