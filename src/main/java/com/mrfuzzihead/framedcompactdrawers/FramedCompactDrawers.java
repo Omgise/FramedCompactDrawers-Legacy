@@ -13,16 +13,18 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 @Mod(
     modid = FramedCompactDrawers.MODID,
     version = Tags.VERSION,
-    name = "FramedCompactDrawers",
-    dependencies = "required-after:StorageDrawers;",
+    name = FramedCompactDrawers.MODNAME,
+    dependencies = FramedCompactDrawers.DEPENDENCIES,
     acceptedMinecraftVersions = "[1.7.10]")
 public class FramedCompactDrawers {
 
     public static final String MODID = "framedcompactdrawers";
+    public static final String MODNAME = "Framed Compact Drawers";
+    public static final String DEPENDENCIES = "required-after:StorageDrawers;";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     @SidedProxy(
-        clientSide = "com.mrfuzzihead.framedcompactdrawers.ClientProxy",
+        clientSide = "com.mrfuzzihead.framedcompactdrawers.client.ClientProxy",
         serverSide = "com.mrfuzzihead.framedcompactdrawers.CommonProxy")
     public static CommonProxy proxy;
 
