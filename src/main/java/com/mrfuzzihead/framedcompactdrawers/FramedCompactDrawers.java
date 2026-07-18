@@ -24,7 +24,7 @@ public class FramedCompactDrawers {
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     @SidedProxy(
-        clientSide = "com.mrfuzzihead.framedcompactdrawers.client.ClientProxy",
+        clientSide = "com.mrfuzzihead.framedcompactdrawers.ClientProxy",
         serverSide = "com.mrfuzzihead.framedcompactdrawers.CommonProxy")
     public static CommonProxy proxy;
 
