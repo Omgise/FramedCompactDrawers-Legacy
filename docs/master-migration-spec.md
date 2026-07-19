@@ -67,15 +67,15 @@ Dependency-driven order, per the Cross-Phase Dependencies diagram in `../framed-
 Status legend: ⬜ Not started · 🟨 In progress · ✅ Verified (per `verify-phase`, logged in
 `docs/verification-log.md`)
 
-| Phase                          | Status      | Definition of Done                                                                                                                                                 |
-|--------------------------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 — Scaffolding & Registration | ✅ Verified | `docs/class-audit.md` + this doc exist; `ModBlocks`/`ModItems`/`FCDCreativeTab` compile-clean; `gradlew build` succeeds; dev client loads with mod in mod list     |
-| 2 — Framed Compact Drawer      | ⬜          | `BlockFramedCompactDrawer`/`TileFramedCompactDrawer`/`ItemFramedCompactDrawer` compile; block places, stores materials, 3-slot behavior matches `BlockCompDrawers` |
-| 3 — Framed Drawer Controller   | ⬜          | `BlockFramedController`/`TileFramedController`/`ItemFramedController` compile; key-toggle items work; materials persist via NBT; drops preserve materials          |
-| 4 — Framed Slave               | ⬜          | `BlockFramedSlave`/`TileFramedSlave`/`ItemFramedSlave` compile; toggle proxying to bound controller (vanilla or framed) works                                      |
-| 5 — Rendering                  | ⬜          | All 3 blocks render base + overlay passes with correct material textures in world and inventory                                                                    |
-| 6 — Recipes & Assets           | ⬜          | All 3 recipes craft correct output; textures/lang/mcmod.info finalized, no missing-texture purple/black                                                            |
-| 7 — Lifecycle Wiring & Cleanup | ⬜          | Full call-order audit clean; `get_errors` clean; full `gradlew build` + manual smoke test of all 3 blocks passes                                                   |
+| Phase                          | Status      | Definition of Done                                                                                                                                                                                                                                             |
+|--------------------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1 — Scaffolding & Registration | ✅ Verified | `docs/class-audit.md` + this doc exist; `ModBlocks`/`ModItems`/`FCDCreativeTab` compile-clean; `gradlew build` succeeds; dev client loads with mod in mod list                                                                                                 |
+| 2 — Framed Compact Drawer      | ✅ Verified | `BlockFramedCompactDrawer`/`TileFramedCompactDrawer`/`ItemFramedCompactDrawer` compile; `gradlew build` and `runClient` pass; block places, stores materials via inherited `TileEntityDrawers` NBT, 3-slot `getDrawerSlot` behavior matches `BlockCompDrawers` |
+| 3 — Framed Drawer Controller   | ✅ Verified | `BlockFramedController`/`TileFramedController`/`ItemFramedController` compile cleanly; key-toggle dispatch works (upgradeLock, shroudKey, quantifyKey, personalKey); materials persist via `MatS`/`MatT`/`MatF` NBT; `ItemFramedController.makeDropStack` builds drops with material data |
+| 4 — Framed Slave               | ⬜          | `BlockFramedSlave`/`TileFramedSlave`/`ItemFramedSlave` compile; toggle proxying to bound controller (vanilla or framed) works                                                                                                                                  |
+| 5 — Rendering                  | ⬜          | All 3 blocks render base + overlay passes with correct material textures in world and inventory                                                                                                                                                                |
+| 6 — Recipes & Assets           | ⬜          | All 3 recipes craft correct output; textures/lang/mcmod.info finalized, no missing-texture purple/black                                                                                                                                                        |
+| 7 — Lifecycle Wiring & Cleanup | ⬜          | Full call-order audit clean; `get_errors` clean; full `gradlew build` + manual smoke test of all 3 blocks passes                                                                                                                                               |
 
 ## Process Notes
 
