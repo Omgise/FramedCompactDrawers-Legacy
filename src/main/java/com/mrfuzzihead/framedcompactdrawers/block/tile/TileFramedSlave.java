@@ -1,9 +1,8 @@
 package com.mrfuzzihead.framedcompactdrawers.block.tile;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 
 public class TileFramedSlave extends TileEntitySlave {
 

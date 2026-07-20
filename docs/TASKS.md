@@ -223,7 +223,7 @@ calls to 1.7.10 `RenderHelper`/`PanelBoxRenderer` calls).
   `renderWorldBlock` (1.7.10 has no separate `canRenderInPass`/multi-pass unless the block declares
   `isOpaqueCube()==false`/uses `renderWorldBlock` return value; check whether `BlockDrawersCustom`'s
   `canRenderInPass`/`getRenderBlockPass` needs overriding to get a second pass — mirror
-  `BlockDrawersCustom.class`'s `getRenderBlockPass`/`canRenderInPass` methods seen in the decompile).
+  `BlockDrawersCustom.class`'s `getRenderBlockPass`/`canRenderInPass` methods seen in the decompiled code).
 - [ ] 5.6 Implement `shouldRender3DInInventory(int modelId)` returning `true` and `getRenderId()` returning
   `ClientProxy.framedCompactDrawerRenderId` on `RenderFramedCompactDrawer`.
 - [ ] 5.7 Repeat 5.2-5.6 for `client/render/RenderFramedController.java`, porting geometry from 1.12

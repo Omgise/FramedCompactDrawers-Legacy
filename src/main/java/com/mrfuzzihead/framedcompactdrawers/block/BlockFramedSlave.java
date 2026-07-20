@@ -1,11 +1,5 @@
 package com.mrfuzzihead.framedcompactdrawers.block;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
-
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
 import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
@@ -15,9 +9,13 @@ import com.jaquadro.minecraft.storagedrawers.core.ModItems;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 public class BlockFramedSlave extends BlockSlave {
 

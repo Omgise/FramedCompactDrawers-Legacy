@@ -1,12 +1,5 @@
 package com.mrfuzzihead.framedcompactdrawers.client.render;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.ForgeHooksClient;
-
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -16,9 +9,14 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.ForgeHooksClient;
 
 @SideOnly(Side.CLIENT)
 public class FramedCompactDrawerRenderer extends DrawersRenderer {

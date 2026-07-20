@@ -1,7 +1,12 @@
 package com.mrfuzzihead.framedcompactdrawers.block;
 
-import java.util.List;
-
+import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
+import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
+import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,14 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
-import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
-import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 
 public class BlockFramedCompactDrawer extends BlockDrawersCustom {
 

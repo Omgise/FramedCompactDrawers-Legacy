@@ -2,6 +2,7 @@ package com.mrfuzzihead.framedcompactdrawers;
 
 import com.mrfuzzihead.framedcompactdrawers.registry.ModBlocks;
 import com.mrfuzzihead.framedcompactdrawers.registry.ModItems;
+import com.mrfuzzihead.framedcompactdrawers.registry.ModRecipes;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -22,6 +23,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
+        ModRecipes.init();
         registerRenderers();
     }
 

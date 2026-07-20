@@ -1,16 +1,14 @@
 package com.mrfuzzihead.framedcompactdrawers.mixins.late.storagedrawers;
 
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
-import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
-import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave;
 
 @Mixin(TileEntityFramingTable.class)
 public class MixinTileEntityFramingTable {
