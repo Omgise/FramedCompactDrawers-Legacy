@@ -3,15 +3,15 @@ package com.mrfuzzihead.framedcompactdrawers.block.tile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntitySlave;
 
-public class TileFramedController extends TileEntityController {
+public class TileFramedSlave extends TileEntitySlave {
 
     private ItemStack matSide;
     private ItemStack matTrim;
     private ItemStack matFront;
 
-    public TileFramedController() {
+    public TileFramedSlave() {
         super();
     }
 
@@ -56,6 +56,8 @@ public class TileFramedController extends TileEntityController {
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+
         if (matSide != null) {
             NBTTagCompound sideTag = new NBTTagCompound();
             matSide.writeToNBT(sideTag);
@@ -71,7 +73,5 @@ public class TileFramedController extends TileEntityController {
             matFront.writeToNBT(frontTag);
             tag.setTag("MatF", frontTag);
         }
-
-        super.writeToNBT(tag);
     }
 }

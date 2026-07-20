@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8.5-GTNH",
+  "package": "com.mrfuzzihead.framedcompactdrawers.mixins.late",
+  "refmap": "mixins.framedcompactdrawers.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8"
+}

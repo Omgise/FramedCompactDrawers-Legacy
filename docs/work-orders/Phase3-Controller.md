@@ -24,13 +24,13 @@
 
 ## API Delta Rulebook Rows Applied
 
-| System | 1.12.2 | 1.7.10 |
-|--------|--------|--------|
-| Coordinates | `BlockPos` | `int x, int y, int z` |
-| Block state | `IBlockState` | `int metadata` |
-| Entity/TE data | `NBTTagCompound` (same) | `NBTTagCompound` — same signature |
-| Loot/drops | `getMainDrop` | `ItemStack.makeItemStack` with material NBT |
-| Cross-mod API | `Chameleon` (out of scope) | N/A |
+| System         | 1.12.2                     | 1.7.10                                      |
+|----------------|----------------------------|---------------------------------------------|
+| Coordinates    | `BlockPos`                 | `int x, int y, int z`                       |
+| Block state    | `IBlockState`              | `int metadata`                              |
+| Entity/TE data | `NBTTagCompound` (same)    | `NBTTagCompound` — same signature           |
+| Loot/drops     | `getMainDrop`              | `ItemStack.makeItemStack` with material NBT |
+| Cross-mod API  | `Chameleon` (out of scope) | N/A                                         |
 
 ## Key 1.7.10 Decisions
 

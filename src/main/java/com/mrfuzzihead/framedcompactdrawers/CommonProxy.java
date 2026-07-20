@@ -19,8 +19,6 @@ public class CommonProxy {
         // happens in Phase 7 once Phase 2-4 classes are in place
         ModBlocks.register();
         ModItems.register();
-
-        FramedCompactDrawers.LOG.info("I am " + FramedCompactDrawers.MODNAME + " at version " + Tags.VERSION);
     }
 
     public void init(FMLInitializationEvent event) {
