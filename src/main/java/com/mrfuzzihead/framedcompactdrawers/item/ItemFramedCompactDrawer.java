@@ -1,7 +1,8 @@
 package com.mrfuzzihead.framedcompactdrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import net.minecraft.block.Block;
+
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 
 public class ItemFramedCompactDrawer extends ItemCustomDrawers {
 

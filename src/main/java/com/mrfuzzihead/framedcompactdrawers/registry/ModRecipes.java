@@ -1,9 +1,11 @@
 package com.mrfuzzihead.framedcompactdrawers.registry;
 
-import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import com.jaquadro.minecraft.storagedrawers.core.ModBlocks;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModRecipes {
 

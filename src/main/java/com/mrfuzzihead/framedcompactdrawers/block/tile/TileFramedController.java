@@ -1,8 +1,9 @@
 package com.mrfuzzihead.framedcompactdrawers.block.tile;
 
-import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController;
 
 public class TileFramedController extends TileEntityController {
 

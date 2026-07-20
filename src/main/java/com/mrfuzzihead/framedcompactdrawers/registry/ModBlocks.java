@@ -1,5 +1,7 @@
 package com.mrfuzzihead.framedcompactdrawers.registry;
 
+import net.minecraft.block.Block;
+
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
@@ -10,8 +12,8 @@ import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
 import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedCompactDrawer;
 import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedController;
 import com.mrfuzzihead.framedcompactdrawers.item.ItemFramedSlave;
+
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
 
 public class ModBlocks {
 

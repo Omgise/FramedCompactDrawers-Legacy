@@ -16,8 +16,6 @@ public class CommonProxy {
     public int framedSlaveRenderID = -1;
 
     public void preInit(FMLPreInitializationEvent event) {
-        // Registration is a no-op stub during Phase 1; actual block/item instantiation
-        // happens in Phase 7 once Phase 2-4 classes are in place
         ModBlocks.register();
         ModItems.register();
     }

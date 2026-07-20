@@ -1,12 +1,10 @@
 package com.mrfuzzihead.framedcompactdrawers;
 
-import net.minecraftforge.common.config.Configuration;
-
 import java.io.File;
 
-public class Config {
+import net.minecraftforge.common.config.Configuration;
 
-    public static String greeting = "Hello World";
+public class Config {
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);

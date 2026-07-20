@@ -1,5 +1,11 @@
 package com.mrfuzzihead.framedcompactdrawers.client.render;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
@@ -7,14 +13,10 @@ import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
 public class FramedControllerRenderer implements ISimpleBlockRenderingHandler {

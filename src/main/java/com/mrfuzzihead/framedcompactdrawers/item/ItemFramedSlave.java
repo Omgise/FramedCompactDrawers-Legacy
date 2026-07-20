@@ -1,16 +1,18 @@
 package com.mrfuzzihead.framedcompactdrawers.item;
 
-import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
-import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-import java.util.List;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedSlave;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFramedSlave extends ItemCustomDrawers {
 
