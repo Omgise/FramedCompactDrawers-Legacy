@@ -29,6 +29,10 @@ public class BlockFramedCompactDrawer extends BlockCompDrawers {
     private IIcon overlayDisabledSlots;
     private IIcon defaultFace;
     private IIcon defaultTrim;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconIndicator3;
+
+
 
     @SideOnly(Side.CLIENT)
     public IIcon getDisabledSlotsOverlay() {
@@ -126,6 +130,16 @@ public class BlockFramedCompactDrawer extends BlockCompDrawers {
         return defaultFace;
     }
 
+
+    /** Returns the indicator overlay icon for the given fill step (0 = empty, 6 = full). */
+    @SideOnly(Side.CLIENT)
+    public IIcon getIndicator3Icon(int level) {
+        if (iconIndicator3 == null || level < 0) level = 0;
+        if (level > 6) level = 6;
+        return iconIndicator3[level];
+    }
+
+
     @SideOnly(Side.CLIENT)
     public IIcon getDefaultTrimIcon() {
         return defaultTrim;
@@ -140,6 +154,11 @@ public class BlockFramedCompactDrawer extends BlockCompDrawers {
         overlayTrimShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_trim");
         overlayTrimFace = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_bold_trim");
         overlayDisabledSlots = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/open_3");
+
+        iconIndicator3 = new IIcon[7];
+        for (int i = 0; i < 7; i++)
+            iconIndicator3[i] = register.registerIcon(
+                    FramedCompactDrawers.MODID + ":overlay/framed_compact_drawer_indicator_" + i);
 
         defaultFace = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
         defaultTrim = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
