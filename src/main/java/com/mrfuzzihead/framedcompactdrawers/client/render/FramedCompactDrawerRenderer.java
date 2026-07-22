@@ -57,7 +57,6 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
         BlockFramedCompactDrawer framed = (BlockFramedCompactDrawer) block;
 
         ItemStack matSide = tile.getMaterialSide();
-        if (matSide == null) matSide = new ItemStack(block);
         ItemStack matFront = tile.getMaterialFront();
         if (matFront == null) matFront = matSide;
         ItemStack matTrim = tile.getMaterialTrim();
@@ -125,24 +124,28 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             IIcon trimShadow = framed.getTrimShadowOverlay(false);
             IIcon handle = framed.getHandleOverlay();
             IIcon faceShadow = framed.getFaceShadowOverlay();
+            IIcon disabledSlots = framed.getDisabledSlotsOverlay();
             panelRenderer.setTrimIcon(trimShadow);
             panelRenderer.renderFaceTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
 
-            // Per-slot overlays: handle + face shadow
+            // Per-slot overlays: handle + face shadow + disabled slot overlay
             // Top slot (slot 0)
             rh.setRenderBounds(trimWidth, trimWidth, trimDepth, lessThanHalf, lessThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
             if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+            if (disabledSlots != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, disabledSlots);
 
             // Bottom-left slot (slot 1)
             rh.setRenderBounds(trimWidth, moreThanHalf, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
             if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+            if (disabledSlots != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, disabledSlots);
 
             // Bottom-right slot (slot 2)
             rh.setRenderBounds(moreThanHalf, trimWidth, trimDepth, 1 - trimWidth, lessThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
             if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+            if (disabledSlots != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, disabledSlots);
 
             // Slot divider shadows
             // Horizontal divider (left)
