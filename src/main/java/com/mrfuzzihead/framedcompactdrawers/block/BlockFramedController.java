@@ -1,7 +1,11 @@
 package com.mrfuzzihead.framedcompactdrawers.block;
 
+import java.util.ArrayList;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -12,6 +16,7 @@ import com.jaquadro.minecraft.storagedrawers.api.security.ISecurityProvider;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.LockAttribute;
 import com.jaquadro.minecraft.storagedrawers.block.BlockController;
 import com.jaquadro.minecraft.storagedrawers.core.ModItems;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import com.jaquadro.minecraft.storagedrawers.item.ItemPersonalKey;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedController;
@@ -41,6 +46,8 @@ public class BlockFramedController extends BlockController {
 
     public BlockFramedController() {
         super(FramedCompactDrawers.MODID + ".framed_drawer_controller");
+        setStepSound(Block.soundTypeWood);
+        setHarvestLevel("axe", 0);
     }
 
     @Override
@@ -121,16 +128,42 @@ public class BlockFramedController extends BlockController {
     }
 
     @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        if (willHarvest) return true;
+        return super.removedByPlayer(world, player, x, y, z, false);
+    }
+
+    @Override
+    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+        super.harvestBlock(world, player, x, y, z, meta);
+        world.setBlockToAir(x, y, z);
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+        TileFramedController tile = getTileEntityFramed(world, x, y, z);
+        if (tile != null) {
+            drops.add(
+                ItemCustomDrawers
+                    .makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront()));
+        } else {
+            drops.add(new ItemStack(Item.getItemFromBlock(this), 1, metadata));
+        }
+        return drops;
+    }
+
+    @Override
     public void registerBlockIcons(IIconRegister register) {
         super.registerBlockIcons(register);
 
-        overlayHandle = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/handle_1");
-        overlayFaceShadow = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_face_1");
-        overlayTrimShadow = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_trim_1");
-        overlayTrimFace = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_boldtrim_1");
+        overlayHandle = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/handle");
+        overlayFaceShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_controller_face");
+        overlayTrimShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_controller_trim");
+        overlayTrimFace = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_controller_bold_trim");
 
-        defaultFace = register.registerIcon(StorageDrawers.MOD_ID + ":base/base_default");
-        defaultTrim = register.registerIcon(StorageDrawers.MOD_ID + ":base/trim_default");
+        defaultFace = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
+        defaultTrim = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
     }
 
     @SideOnly(Side.CLIENT)

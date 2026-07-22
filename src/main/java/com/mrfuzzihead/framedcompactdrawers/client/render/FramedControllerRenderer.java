@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
@@ -22,9 +24,26 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class FramedControllerRenderer implements ISimpleBlockRenderingHandler {
 
     private final PanelBoxRenderer panelRenderer = new PanelBoxRenderer();
+    private final ModularBoxRenderer invBoxRenderer = new ModularBoxRenderer();
 
     @Override
-    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {}
+    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
+        if (!(block instanceof BlockFramedController)) return;
+        BlockFramedController controller = (BlockFramedController) block;
+
+        IIcon icon = controller.getDefaultFaceIcon();
+
+        GL11.glRotatef(90, 0, 1, 0);
+        GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
+
+        invBoxRenderer.setUnit(0.0625);
+        invBoxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
+        invBoxRenderer.setIcon(icon);
+
+        invBoxRenderer.renderSolidBox(null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+
+        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+    }
 
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,

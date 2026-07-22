@@ -7,8 +7,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.ForgeHooksClient;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jaquadro.minecraft.storagedrawers.block.BlockDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.DrawersRenderer;
 import com.jaquadro.minecraft.storagedrawers.client.renderer.ModularBoxRenderer;
@@ -16,6 +17,7 @@ import com.jaquadro.minecraft.storagedrawers.client.renderer.PanelBoxRenderer;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelper;
 import com.jaquadro.minecraft.storagedrawers.util.RenderHelperState;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,13 +26,33 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class FramedCompactDrawerRenderer extends DrawersRenderer {
 
     private final PanelBoxRenderer panelRenderer = new PanelBoxRenderer();
+    private final ModularBoxRenderer invBoxRenderer = new ModularBoxRenderer();
     private double trimWidth;
     private double trimDepth;
 
     @Override
+    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
+        if (!(block instanceof BlockFramedCompactDrawer)) return;
+        BlockFramedCompactDrawer framed = (BlockFramedCompactDrawer) block;
+
+        IIcon icon = framed.getDefaultFaceIcon();
+
+        GL11.glRotatef(90, 0, 1, 0);
+        GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
+
+        invBoxRenderer.setUnit(0.0625);
+        invBoxRenderer.setColor(ModularBoxRenderer.COLOR_WHITE);
+        invBoxRenderer.setIcon(icon);
+
+        invBoxRenderer.renderSolidBox(null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+
+        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+    }
+
+    @Override
     protected void renderBaseBlock(IBlockAccess world, TileEntityDrawers tile, int x, int y, int z, BlockDrawers block,
         RenderBlocks renderer) {
-        BlockDrawersCustom custom = (BlockDrawersCustom) block;
+        BlockFramedCompactDrawer framed = (BlockFramedCompactDrawer) block;
 
         ItemStack matSide = tile.getMaterialSide();
         if (matSide == null) matSide = new ItemStack(block);
@@ -39,13 +61,13 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
         ItemStack matTrim = tile.getMaterialTrim();
         if (matTrim == null) matTrim = matSide;
 
-        IIcon sideIcon = resolveIcon(matSide, custom.getDefaultFaceIcon());
-        IIcon trimIcon = resolveIcon(matTrim, custom.getDefaultTrimIcon());
-        IIcon frontIcon = resolveIcon(matFront, custom.getDefaultFaceIcon());
+        IIcon sideIcon = resolveIcon(matSide, framed.getDefaultFaceIcon());
+        IIcon trimIcon = resolveIcon(matTrim, framed.getDefaultTrimIcon());
+        IIcon frontIcon = resolveIcon(matFront, framed.getDefaultFaceIcon());
 
         int dir = tile.getDirection();
-        trimWidth = custom.getTrimWidth();
-        trimDepth = custom.getTrimDepth();
+        trimWidth = framed.getTrimWidth();
+        trimDepth = framed.getTrimDepth();
 
         panelRenderer.setTrimWidth(trimWidth);
         panelRenderer.setTrimDepth(0);
@@ -62,24 +84,24 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             panelRenderer.setTrimIcon(trimIcon);
             panelRenderer.setPanelIcon(sideIcon);
             for (int i = 0; i < 6; i++) {
-                if (i != RenderHelper.ZNEG) panelRenderer.renderFacePanel(i, world, custom, x, y, z, 0, 0, 0, 1, 1, 1);
-                panelRenderer.renderFaceTrim(i, world, custom, x, y, z, 0, 0, 0, 1, 1, 1);
+                if (i != RenderHelper.ZNEG) panelRenderer.renderFacePanel(i, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
+                panelRenderer.renderFaceTrim(i, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
             }
             panelRenderer.setTrimDepth(trimDepth);
-            panelRenderer.renderInteriorTrim(RenderHelper.ZNEG, world, custom, x, y, z, 0, 0, 0, 1, 1, 1);
+            panelRenderer.renderInteriorTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
             rh.state.flipTexture = true;
             rh.setRenderBounds(trimWidth, trimWidth, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
-            rh.renderFace(RenderHelper.ZNEG, world, custom, x, y, z, frontIcon);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, frontIcon);
             rh.state.flipTexture = false;
         } else if (pass == 1) {
-            IIcon trimShadow = custom.getTrimShadowOverlay(false);
-            IIcon handle = custom.getHandleOverlay();
-            IIcon faceShadow = custom.getFaceShadowOverlay();
+            IIcon trimShadow = framed.getTrimShadowOverlay(false);
+            IIcon handle = framed.getHandleOverlay();
+            IIcon faceShadow = framed.getFaceShadowOverlay();
             panelRenderer.setTrimIcon(trimShadow);
-            panelRenderer.renderFaceTrim(RenderHelper.ZNEG, world, custom, x, y, z, 0, 0, 0, 1, 1, 1);
+            panelRenderer.renderFaceTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
             rh.setRenderBounds(trimWidth, trimWidth, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
-            rh.renderFace(RenderHelper.ZNEG, world, custom, x, y, z, handle);
-            if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, custom, x, y, z, faceShadow);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
+            if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
         }
 
         rh.state.clearRotateTransform();

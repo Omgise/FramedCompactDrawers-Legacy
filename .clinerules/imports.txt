@@ -1,0 +1,1 @@
+Try to avoid using a fully qualified classpath and instead import the class, where possible

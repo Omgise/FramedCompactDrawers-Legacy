@@ -5,22 +5,22 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.jaquadro.minecraft.storagedrawers.StorageDrawers;
-import com.jaquadro.minecraft.storagedrawers.block.BlockDrawersCustom;
+import com.jaquadro.minecraft.storagedrawers.block.BlockCompDrawers;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
 import com.mrfuzzihead.framedcompactdrawers.FramedCompactDrawers;
 import com.mrfuzzihead.framedcompactdrawers.block.tile.TileFramedCompactDrawer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFramedCompactDrawer extends BlockDrawersCustom {
+public class BlockFramedCompactDrawer extends BlockCompDrawers {
 
     private IIcon overlayHandle;
     private IIcon overlayFaceShadow;
@@ -30,19 +30,32 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
     private IIcon defaultTrim;
 
     public BlockFramedCompactDrawer() {
-        super(FramedCompactDrawers.MODID + ".framed_compact_drawer", 3, false);
-        setStepSound(Block.soundTypeStone);
+        super(FramedCompactDrawers.MODID + ".framed_compact_drawer");
+        setStepSound(Block.soundTypeWood);
+        setHarvestLevel("axe", 0);
     }
 
     @Override
-    public int getDrawerSlot(int side, float hitX, float hitY, float hitZ) {
-        if (hitTop(hitY)) {
-            return 0;
-        }
-
-        return hitLeft(side, hitX, hitZ) ? 1 : 2;
+    public int getRenderType() {
+        return FramedCompactDrawers.proxy.framedCompactDrawerRenderID;
     }
 
+    @Override
+    public int getRenderBlockPass() {
+        return 1;
+    }
+
+    @Override
+    public boolean canRenderInPass(int pass) {
+        return true;
+    }
+
+    @Override
+    public TileEntityDrawers createNewTileEntity(World world, int meta) {
+        return new TileFramedCompactDrawer();
+    }
+
+    @Override
     public void getSubBlocks(Item item, CreativeTabs creativeTabs, List list) {
         if (StorageDrawers.config.cache.addonShowVanilla) {
             list.add(new ItemStack(item, 1, 0));
@@ -50,19 +63,13 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
-        float hitY, float hitZ) {
+    protected ItemStack getMainDrop(World world, int x, int y, int z, int metadata) {
         TileEntityDrawers tile = getTileEntity(world, x, y, z);
-        if (tile != null && tile.getMaterialSide() == null) {
-            return false;
+        if (tile == null) {
+            return ItemCustomDrawers.makeItemStack(this, 1, null, null, null);
         }
-
-        return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
-    }
-
-    @Override
-    public TileEntityDrawers createNewTileEntity(World world, int meta) {
-        return new TileFramedCompactDrawer();
+        return ItemCustomDrawers
+            .makeItemStack(this, 1, tile.getMaterialSide(), tile.getMaterialTrim(), tile.getMaterialFront());
     }
 
     public IIcon getOverlayIcon(int side, int maxStorageLevel) {
@@ -122,20 +129,12 @@ public class BlockFramedCompactDrawer extends BlockDrawersCustom {
     public void registerBlockIcons(IIconRegister register) {
         super.registerBlockIcons(register);
 
-        overlayHandle = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/handle_3");
-        overlayFaceShadow = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_face_3");
-        overlayTrimShadow = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_trim_3");
-        overlayTrimFace = register.registerIcon(StorageDrawers.MOD_ID + ":overlay/shading_boldtrim_3");
+        overlayHandle = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/handle");
+        overlayFaceShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_face");
+        overlayTrimShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_trim");
+        overlayTrimFace = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_bold_trim");
 
-        defaultFace = register.registerIcon(StorageDrawers.MOD_ID + ":base/base_default");
-        defaultTrim = register.registerIcon(StorageDrawers.MOD_ID + ":base/trim_default");
-
-        iconSide[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");
-        iconSideV[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");
-        iconSideH[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");
-        iconTrim[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_side");
-        iconFront1[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_front_1");
-        iconFront2[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_front_2");
-        iconFront4[0] = register.registerIcon(StorageDrawers.MOD_ID + ":drawers_raw_front_4");
+        defaultFace = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
+        defaultTrim = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
     }
 }

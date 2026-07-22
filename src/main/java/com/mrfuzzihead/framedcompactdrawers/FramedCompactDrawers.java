@@ -20,7 +20,7 @@ public class FramedCompactDrawers {
 
     public static final String MODID = "framedcompactdrawers";
     public static final String MODNAME = "Framed Compact Drawers";
-    public static final String DEPENDENCIES = "after:waila;required-after:StorageDrawers;";
+    public static final String DEPENDENCIES = "after:StorageDrawers;after:waila;";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     @SidedProxy(

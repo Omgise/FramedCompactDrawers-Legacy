@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jaquadro.minecraft.storagedrawers.inventory.ContainerFramingTable;
 import com.jaquadro.minecraft.storagedrawers.item.ItemCustomDrawers;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave;
 
@@ -47,7 +48,8 @@ public class MixinContainerFramingTable {
         if (target == null) return;
 
         Block block = Block.getBlockFromItem(target.getItem());
-        if (!(block instanceof BlockFramedController) && !(block instanceof BlockFramedSlave)) return;
+        if (!(block instanceof BlockFramedCompactDrawer) && !(block instanceof BlockFramedController)
+            && !(block instanceof BlockFramedSlave)) return;
 
         ItemStack matSide = tableInventory.getStackInSlot(materialSideSlot.getSlotIndex());
         if (matSide == null) return;
