@@ -125,6 +125,26 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             rh.setRenderBounds(lessThanHalf, lessThanHalf, trimDepth, moreThanHalf, moreThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimIcon);
 
+            // Storage upgrade overlay: re-render outer trim + cut/inside faces with overlay textures
+            int maxStorageLevel = tile.getMaxStorageLevel();
+            if (maxStorageLevel > 1 && StorageDrawers.config.cache.renderStorageUpgrades
+                && !tile.shouldHideUpgrades()) {
+                IIcon overlayTrim = framed.getOverlayIconTrim(maxStorageLevel);
+                if (overlayTrim != null) {
+                    panelRenderer.setTrimIcon(overlayTrim);
+                    panelRenderer.setPanelIcon(overlayTrim);
+                    panelRenderer.setTrimColor(ModularBoxRenderer.COLOR_WHITE);
+                    panelRenderer.setPanelColor(ModularBoxRenderer.COLOR_WHITE);
+                    panelRenderer.setTrimDepth(0);
+                    for (int i = 0; i < 6; i++) {
+                        panelRenderer.renderFaceTrim(i, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
+                    }
+                    panelRenderer.setTrimDepth(trimDepth);
+                    panelRenderer.renderInteriorTrim(
+                        RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
+                }
+            }
+
             rh.state.flipTexture = false;
         } else if (pass == 1) {
             IIcon trimShadow = framed.getTrimShadowOverlay(false);

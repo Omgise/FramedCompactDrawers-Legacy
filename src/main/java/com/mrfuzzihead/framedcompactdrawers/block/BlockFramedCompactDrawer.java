@@ -98,10 +98,6 @@ public class BlockFramedCompactDrawer extends BlockCompDrawers {
         return null;
     }
 
-    public IIcon getOverlayIconTrim(int maxStorageLevel) {
-        return getOverlayIconTrim();
-    }
-
     public IIcon getOverlayIconTrim() {
         return overlayTrimShadow;
     }
