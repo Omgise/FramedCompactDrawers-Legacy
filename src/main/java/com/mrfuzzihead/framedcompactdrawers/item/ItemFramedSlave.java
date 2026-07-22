@@ -24,7 +24,8 @@ public class ItemFramedSlave extends ItemCustomDrawers {
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-        list.add(StatCollector.translateToLocal("storagedrawers.slave.description"));
+        super.addInformation(stack, player, list, advanced);
+        list.add(StatCollector.translateToLocalFormatted("storageDrawers.controllerSlave.description"));
     }
 
     @Override

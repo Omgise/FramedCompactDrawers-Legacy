@@ -1,6 +1,5 @@
 package com.mrfuzzihead.framedcompactdrawers.mixins.late.storagedrawers;
 
-import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -10,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityFramingTable;
+import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedCompactDrawer;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedController;
 import com.mrfuzzihead.framedcompactdrawers.block.BlockFramedSlave;
 
@@ -25,7 +25,8 @@ public class MixinTileEntityFramingTable {
         if (stack == null || stack.getItem() == null) return;
 
         Block block = Block.getBlockFromItem(stack.getItem());
-        if (block instanceof BlockFramedController || block instanceof BlockFramedSlave || block instanceof BlockFramedCompactDrawer) {
+        if (block instanceof BlockFramedController || block instanceof BlockFramedSlave
+            || block instanceof BlockFramedCompactDrawer) {
             cir.setReturnValue(true);
         }
     }

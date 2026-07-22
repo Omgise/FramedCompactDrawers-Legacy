@@ -25,9 +25,7 @@ public class CommonProxy {
         registerRenderers();
     }
 
-    public void postInit(FMLPostInitializationEvent event) {
-        WailaIntegration.postInit(event);
-    }
+    public void postInit(FMLPostInitializationEvent event) {}
 
     public void serverStarting(FMLServerStartingEvent event) {}
 
