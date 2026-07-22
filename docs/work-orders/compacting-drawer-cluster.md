@@ -33,5 +33,15 @@
 5. Material data persists via inherited `TileEntityDrawersComp` NBT (`MatS`/`MatF`/`MatT` tags)
 6. Custom-material overlay textures render correctly in world and inventory (handled in Phase 5)
 
+### Post-Completion Fixes
+- **2026-07-21 — Drawer capacity 0 bug (OpenQuestions.txt #1):** placed drawers showed tier items on the face but
+  accepted nothing (counts stayed 0). Root cause: `ItemDrawers.getCapacityForBlock()` resolves drawerCount==3
+  capacity via config key `"compDrawers"`, but `ConfigManager` registers the section as lowercase `"compdrawers"`,
+  so `ItemDrawers.placeBlockAt()` set `drawerCapacity = 0`. Vanilla SD avoids this because `ModBlocks.compDrawers`
+  is registered with `ItemCompDrawers`, whose `placeBlockAt` re-sets capacity with the correctly-cased key.
+  Fixed by overriding `getCapacityForBlock()` in `ItemFramedCompactDrawer` to return
+  `StorageDrawers.config.getBlockBaseStorage("compdrawers")` for `BlockFramedCompactDrawer` (also corrects the
+  item tooltip). Drawers placed before the fix retain `"Cap":0` NBT and must be broken and re-placed.
+
 ### Status
-✅ **Complete** — All criteria met, verified 2026-07-18.
+✅ **Complete** — All criteria met, verified 2026-07-18. Capacity fix applied 2026-07-21.
