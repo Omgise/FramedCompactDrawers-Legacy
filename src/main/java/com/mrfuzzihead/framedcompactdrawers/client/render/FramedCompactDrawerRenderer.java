@@ -29,6 +29,8 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
     private final ModularBoxRenderer invBoxRenderer = new ModularBoxRenderer();
     private double trimWidth;
     private double trimDepth;
+    private static final double lessThanHalf = 0.4375;
+    private static final double moreThanHalf = 0.5625;
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -89,9 +91,35 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             }
             panelRenderer.setTrimDepth(trimDepth);
             panelRenderer.renderInteriorTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
+
             rh.state.flipTexture = true;
-            rh.setRenderBounds(trimWidth, trimWidth, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
+
+            // Top slot (slot 0)
+            rh.setRenderBounds(trimWidth, trimWidth, trimDepth, lessThanHalf, lessThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, frontIcon);
+
+            // Bottom-left slot (slot 1)
+            rh.setRenderBounds(trimWidth, moreThanHalf, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, frontIcon);
+
+            // Bottom-right slot (slot 2)
+            rh.setRenderBounds(moreThanHalf, trimWidth, trimDepth, 1 - trimWidth, lessThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, frontIcon);
+
+            // Slot dividers
+            // Horizontal divider between top slot and bottom half (left side)
+            rh.setRenderBounds(trimWidth, lessThanHalf, trimDepth, lessThanHalf, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimIcon);
+            // Horizontal divider between top slot and bottom half (right side)
+            rh.setRenderBounds(moreThanHalf, lessThanHalf, trimDepth, 1 - trimWidth, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimIcon);
+            // Vertical divider between top-left and top-right
+            rh.setRenderBounds(lessThanHalf, trimWidth, trimDepth, moreThanHalf, lessThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimIcon);
+            // Center cross
+            rh.setRenderBounds(lessThanHalf, lessThanHalf, trimDepth, moreThanHalf, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimIcon);
+
             rh.state.flipTexture = false;
         } else if (pass == 1) {
             IIcon trimShadow = framed.getTrimShadowOverlay(false);
@@ -99,9 +127,36 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             IIcon faceShadow = framed.getFaceShadowOverlay();
             panelRenderer.setTrimIcon(trimShadow);
             panelRenderer.renderFaceTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
-            rh.setRenderBounds(trimWidth, trimWidth, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
+
+            // Per-slot overlays: handle + face shadow
+            // Top slot (slot 0)
+            rh.setRenderBounds(trimWidth, trimWidth, trimDepth, lessThanHalf, lessThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
             if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+
+            // Bottom-left slot (slot 1)
+            rh.setRenderBounds(trimWidth, moreThanHalf, trimDepth, 1 - trimWidth, 1 - trimWidth, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
+            if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+
+            // Bottom-right slot (slot 2)
+            rh.setRenderBounds(moreThanHalf, trimWidth, trimDepth, 1 - trimWidth, lessThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, handle);
+            if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, faceShadow);
+
+            // Slot divider shadows
+            // Horizontal divider (left)
+            rh.setRenderBounds(trimWidth, lessThanHalf, trimDepth, lessThanHalf, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimShadow);
+            // Horizontal divider (right)
+            rh.setRenderBounds(moreThanHalf, lessThanHalf, trimDepth, 1 - trimWidth, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimShadow);
+            // Vertical divider
+            rh.setRenderBounds(lessThanHalf, trimWidth, trimDepth, moreThanHalf, lessThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimShadow);
+            // Center cross
+            rh.setRenderBounds(lessThanHalf, lessThanHalf, trimDepth, moreThanHalf, moreThanHalf, 1);
+            rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimShadow);
         }
 
         rh.state.clearRotateTransform();
