@@ -44,6 +44,12 @@ public class BlockFramedSlave extends BlockSlave {
     @SideOnly(Side.CLIENT)
     private IIcon defaultTrim;
 
+    @SideOnly(Side.CLIENT)
+    private IIcon defaultTopBottom;
+
+    @SideOnly(Side.CLIENT)
+    private IIcon overlaySideShadow;
+
     public BlockFramedSlave() {
         super(FramedCompactDrawers.MODID + ".framed_slave");
         setStepSound(Block.soundTypeWood);
@@ -53,6 +59,11 @@ public class BlockFramedSlave extends BlockSlave {
     @Override
     public int getRenderType() {
         return FramedCompactDrawers.proxy.framedSlaveRenderID;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
     }
 
     @Override
@@ -166,12 +177,21 @@ public class BlockFramedSlave extends BlockSlave {
         super.registerBlockIcons(register);
 
         overlayHandle = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/handle");
-        overlayFaceShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_side");
-        overlayTrimShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_side");
-        overlayTrimFace = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_side");
+        overlaySideShadow = register.registerIcon(FramedCompactDrawers.MODID + ":overlay/shading_side");
 
         defaultFace = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
         defaultTrim = register.registerIcon(FramedCompactDrawers.MODID + ":raw_side");
+        defaultTopBottom = register.registerIcon(FramedCompactDrawers.MODID + ":slave_raw_top_bottom");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getDefaultTopBottomIcon() {
+        return defaultTopBottom;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getOverlaySideShadow() {
+        return overlaySideShadow;
     }
 
     @SideOnly(Side.CLIENT)

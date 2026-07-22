@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import org.lwjgl.opengl.GL11;
 
@@ -55,9 +56,12 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
 
         ItemStack matSide = tile.getMaterialSide();
         ItemStack matTrim = tile.getMaterialTrim();
+        ItemStack matTopBottom = tile.getMaterialFront();
+        if (matTopBottom == null) matTopBottom = matSide;
 
         IIcon sideIcon = resolveIcon(matSide, slave.getDefaultFaceIcon());
         IIcon trimIcon = resolveIcon(matTrim, slave.getDefaultTrimIcon());
+        IIcon topBottomIcon = resolveIcon(matTopBottom, slave.getDefaultTopBottomIcon());
 
         double trimWidth = 0.0625;
         panelRenderer.setTrimWidth(trimWidth);
@@ -68,11 +72,25 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
         RenderHelper rh = RenderHelper.instances.get();
         rh.setColorAndBrightness(world, block, x, y, z);
 
-        panelRenderer.setTrimIcon(trimIcon);
-        panelRenderer.setPanelIcon(sideIcon);
-        for (int i = 0; i < 6; i++) {
-            panelRenderer.renderFacePanel(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
-            panelRenderer.renderFaceTrim(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+        int pass = ForgeHooksClient.getWorldRenderPass();
+
+        if (pass == 0) {
+            panelRenderer.setTrimIcon(trimIcon);
+            for (int i = 0; i < 6; i++) {
+                panelRenderer.setPanelIcon(i == 0 || i == 1 ? topBottomIcon : sideIcon);
+                panelRenderer.renderFacePanel(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                panelRenderer.renderFaceTrim(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+            }
+        } else if (pass == 1) {
+            IIcon sideShadow = slave.getOverlaySideShadow();
+            if (sideShadow != null) {
+                panelRenderer.setTrimIcon(sideShadow);
+                for (int i = 2; i < 6; i++) {
+                    panelRenderer.setPanelIcon(sideShadow);
+                    panelRenderer.renderFacePanel(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                    panelRenderer.renderFaceTrim(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                }
+            }
         }
 
         rh.state.clearRotateTransform();
