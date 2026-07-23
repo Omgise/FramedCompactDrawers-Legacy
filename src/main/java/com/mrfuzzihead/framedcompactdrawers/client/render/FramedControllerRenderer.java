@@ -33,6 +33,7 @@ public class FramedControllerRenderer implements ISimpleBlockRenderingHandler {
 
         IIcon icon = controller.getDefaultFaceIcon();
 
+        GL11.glPushMatrix();
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
@@ -42,7 +43,7 @@ public class FramedControllerRenderer implements ISimpleBlockRenderingHandler {
 
         invBoxRenderer.renderSolidBox(null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        GL11.glPopMatrix();
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.mrfuzzihead.framedcompactdrawers.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -45,6 +44,7 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
 
         IIcon icon = framed.getDefaultFaceIcon();
 
+        GL11.glPushMatrix();
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
@@ -54,7 +54,7 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
 
         invBoxRenderer.renderSolidBox(null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        GL11.glPopMatrix();
     }
 
     @Override
@@ -140,13 +140,13 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
                         panelRenderer.renderFaceTrim(i, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
                     }
                     panelRenderer.setTrimDepth(trimDepth);
-                    panelRenderer.renderInteriorTrim(
-                        RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
+                    panelRenderer.renderInteriorTrim(RenderHelper.ZNEG, world, framed, x, y, z, 0, 0, 0, 1, 1, 1);
                 }
             }
 
             rh.state.flipTexture = false;
         } else if (pass == 1) {
+            GL11.glDepthMask(false);
             IIcon trimShadow = framed.getTrimShadowOverlay(false);
             IIcon handle = framed.getHandleOverlay();
             IIcon faceShadow = framed.getFaceShadowOverlay();
@@ -186,6 +186,7 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
             // Center cross
             rh.setRenderBounds(lessThanHalf, lessThanHalf, trimDepth, moreThanHalf, moreThanHalf, 1);
             rh.renderFace(RenderHelper.ZNEG, world, framed, x, y, z, trimShadow);
+            GL11.glDepthMask(true);
         }
 
         rh.state.clearRotateTransform();
@@ -266,18 +267,17 @@ public class FramedCompactDrawerRenderer extends DrawersRenderer {
 
         // Sample only the indicator art region from the 8x8 padded texture.
         // Parameters are icon-space fractions (0-1), converted internally via getInterpolatedU(getInterpolatedV.
-        double uMin = 0.25;  // pixel 2/8
-        double uMax = 0.75;  // pixel 6/8
+        double uMin = 0.25; // pixel 2/8
+        double uMax = 0.75; // pixel 6/8
         double vMin = 0.125; // pixel 1/8
-        double vMax = 1.0;   // pixel 8/8
+        double vMax = 1.0; // pixel 8/8
 
         // Render on the ZNEG face (drawer front) at the same depth as the handle.
         // Use renderPartialFace with explicit UVs to sample only the indicator art,
         // avoiding the transparent padding.
         rh.setRenderBounds(minX, minY, trimZ - 0.001, maxX, maxY, trimZ + 0.001);
         rh.state.setRotateTransform(RenderHelper.ZNEG, side);
-        rh.renderPartialFace(
-            RenderHelper.ZNEG, world, block, x, y, z, icon, uMin, vMin, uMax, vMax);
+        rh.renderPartialFace(RenderHelper.ZNEG, world, block, x, y, z, icon, uMin, vMin, uMax, vMax);
         rh.state.clearRotateTransform();
     }
 

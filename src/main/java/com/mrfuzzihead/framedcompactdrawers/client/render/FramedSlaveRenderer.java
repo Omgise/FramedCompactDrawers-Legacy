@@ -33,6 +33,7 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
 
         IIcon icon = slave.getDefaultFaceIcon();
 
+        GL11.glPushMatrix();
         GL11.glRotatef(90, 0, 1, 0);
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
@@ -42,7 +43,7 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
 
         invBoxRenderer.renderSolidBox(null, block, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
-        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+        GL11.glPopMatrix();
     }
 
     @Override
@@ -72,6 +73,11 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
         RenderHelper rh = RenderHelper.instances.get();
         rh.setColorAndBrightness(world, block, x, y, z);
 
+        // Protect against stale state from previous renderers on this thread
+        int prevRotate = rh.state.rotateTransform;
+        int prevUvRotY = rh.state.uvRotate[RenderHelper.YPOS];
+        int prevUvRotN = rh.state.uvRotate[RenderHelper.YNEG];
+
         int pass = ForgeHooksClient.getWorldRenderPass();
 
         if (pass == 0) {
@@ -84,17 +90,24 @@ public class FramedSlaveRenderer implements ISimpleBlockRenderingHandler {
         } else if (pass == 1) {
             IIcon sideShadow = slave.getOverlaySideShadow();
             if (sideShadow != null) {
-                panelRenderer.setTrimIcon(sideShadow);
-                for (int i = 2; i < 6; i++) {
-                    panelRenderer.setPanelIcon(sideShadow);
-                    panelRenderer.renderFacePanel(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
-                    panelRenderer.renderFaceTrim(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                GL11.glDepthMask(false);
+                try {
+                    panelRenderer.setTrimIcon(sideShadow);
+                    for (int i = 2; i < 6; i++) {
+                        panelRenderer.setPanelIcon(sideShadow);
+                        panelRenderer.renderFacePanel(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                        panelRenderer.renderFaceTrim(i, world, slave, x, y, z, 0, 0, 0, 1, 1, 1);
+                    }
+                } finally {
+                    GL11.glDepthMask(true);
                 }
             }
         }
 
-        rh.state.clearRotateTransform();
-        rh.state.clearUVRotation(RenderHelper.YPOS);
+        // Restore previous state
+        rh.state.rotateTransform = prevRotate;
+        rh.state.uvRotate[RenderHelper.YPOS] = prevUvRotY;
+        rh.state.uvRotate[RenderHelper.YNEG] = prevUvRotN;
         return true;
     }
 
