@@ -10,10 +10,8 @@ public enum Mixins implements IMixins {
     // Read the Javadoc of IMixins and MixinBuilder for further information
     // You should declare all of your mixins early and late in this same enum
     STORAGEDRAWERS(new MixinBuilder().setPhase(Phase.LATE)
-        .addCommonMixins(
-            "storagedrawers.MixinTileEntityFramingTable",
-            "storagedrawers.MixinContainerFramingTable",
-            "storagedrawers.MixinDrawersItemRenderer")
+        .addCommonMixins("storagedrawers.MixinTileEntityFramingTable", "storagedrawers.MixinContainerFramingTable")
+        .addClientMixins("storagedrawers.MixinDrawersItemRenderer")
         .addRequiredMod(TargetMods.STORAGEDRAWERS));
 
     private final MixinBuilder builder;
