@@ -122,6 +122,14 @@ public class MixinDrawersItemRenderer {
         rh.setRenderBounds(moreThanHalf, trimWidth, trimDepth, 1 - trimWidth, lessThanHalf, 1);
         rh.renderFace(RenderHelper.ZNEG, null, block, 0, 0, 0, handleOverlay);
         if (faceShadow != null) rh.renderFace(RenderHelper.ZNEG, null, block, 0, 0, 0, faceShadow);
+
+        // Packing tape overlay — matches DrawersItemRenderer.renderDrawer() behavior
+        if (item.hasTagCompound() && item.getTagCompound()
+            .hasKey("tile")) {
+            double depth = block.halfDepth ? .5 : 1;
+            rh.setRenderBounds(1 - depth - .005, 0, 0, 1, 1, 1);
+            rh.renderFace(RenderHelper.XNEG, null, block, block.getTapeIcon(), 1, 1, 1);
+        }
     }
 
     private static IIcon resolveIcon(ItemStack stack, IIcon fallback) {

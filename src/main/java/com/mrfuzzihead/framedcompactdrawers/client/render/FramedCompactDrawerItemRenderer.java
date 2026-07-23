@@ -115,6 +115,15 @@ public class FramedCompactDrawerItemRenderer implements IItemRenderer {
 
         rh.state.flipTexture = false;
 
+        // Packing tape overlay — matches DrawersItemRenderer.renderDrawer() behavior
+        if (item.hasTagCompound() && item.getTagCompound()
+            .hasKey("tile")) {
+            double depth = block.halfDepth ? .5 : 1;
+            rh.state.clearRotateTransform();
+            rh.setRenderBounds(1 - depth - .005, 0, 0, 1, 1, 1);
+            rh.renderFace(RenderHelper.XNEG, null, block, block.getTapeIcon(), 1, 1, 1);
+        }
+
         rh.state.clearRotateTransform();
         rh.state.clearUVRotation(RenderHelper.YPOS);
     }
