@@ -1,27 +1,19 @@
-{
-	"modListVersion": 2,
-	"modList": [{
-		"modid": "${modId}",
-		"name": "${modName}",
-		"description": "A backport of FramedCompactDrawers from 1.12.2 to 1.7.10, providing custom material overlays for Storage Drawers blocks.",
-		"version": "${modVersion}",
-		"mcversion": "${minecraftVersion}",
-		"url": "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy",
-		"updateUrl": "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy/releases/latest",
-		"authorList": ["MrFuzzihead"],
-		"credits": "Original concept by eutros (1.12.2)",
-		"logoFile": "",
-		"screenshots": [],
-		"parent": "",
-		"requiredMods": ["storagedrawers"],
-		"dependencies": [
-			{
-				"modId": "storagedrawers",
-				"optional": false,
-				"reason": "Required for drawer functionality and custom material system."
-			}
-		],
-		"dependants": [],
-		"useDependencyInformation": true
-	}]
-}
+[
+  {
+    "modid" : "${modId}",
+    "name" : "${modName}",
+    "version" : "${modVersion}",
+    "mcversion" : "${minecraftVersion}",
+    "url" : "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy",
+    "credits" : "Original concept by eutros (1.12.2)",
+    "authors" : [
+      "MrFuzzihead"
+    ],
+    "description" : "A backport of FramedCompactDrawers from 1.12.2 to 1.7.10, providing custom material overlays for Storage Drawers blocks.",
+    "logoFile" : "pack.png",
+    "updateUrl" : "https://github.com/MrFuzzihead/FramedCompactDrawers-Legacy/releases/latest",
+    "parent" : "",
+    "screenshots": [
+    ]
+  }
+]
