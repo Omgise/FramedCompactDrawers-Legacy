@@ -1,0 +1,2 @@
+When using gradlew to test build output, make sure to run "spotlessApply" as well as this project uses spotless formatting.
+Also, we should run gradlew with "check" as we adhere to checkstyle conventions as well.
